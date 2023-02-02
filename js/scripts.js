@@ -1,18 +1,17 @@
 //Note
-/*Note2*/
-let myName = 'Bob';
-document.write(myName);
-myName = 'John Doe';
-document.write(myName);
 
-let simpleAddition = 2 + 2;
-document.write(simpleAddition);
+class Pokemon{
+    constructor(name, height, type){
+        this.name = name;
+        this.height = height;
+        this.type = type;
+    }
+}
 
-let size = 100;
-let doubleSize = size * 2;
-document.write(doubleSize);
-let minSize = (doubleSize * 2) - (size / 2);
-document.write(minSize);
+let pokemon1 = new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]);
+let pokemon2 = new Pokemon("Charmander", 2, "Fire");
+let pokemon3 = new Pokemon("Squirtle", 1.08, "Water");
 
-let favoriteFood = "Tacos";
-document.write(favoriteFood);
+let pokemonList = [pokemon1, pokemon2, pokemon3]
+
+console.log(pokemonList)
