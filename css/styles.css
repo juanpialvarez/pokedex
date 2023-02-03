@@ -79,3 +79,8 @@ body{
     text-align: center;
     color: var(--secondary-color);
 }
+
+#pokedex-image{
+    text-align: center;
+    width: 100%;
+}

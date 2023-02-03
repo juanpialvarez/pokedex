@@ -1,25 +1,27 @@
-//Note
 
-class Pokemon{
-    constructor(name, height, type){
-        this.name = name;
-        this.height = height;
-        this.type = type;
+async function fetchPokemon(pokemon) {
+    const endpoint = new URL(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+    const response = await fetch(endpoint);
+    const pokemonData = await response.json();
+    const pokemonImage = document.createElement('img');
+    pokemonImage.src = pokemonData.sprites.front_default;
+    pokemonImage.id = 'pokemon-image';
+    document.getElementById('pokedex-image').appendChild(pokemonImage);
+    document.querySelector('#pokemon-name').innerText = pokemonData.name;
+    document.querySelector('#pokemon-name').innerText = pokemonData.name;
+    document.querySelector('#height').innerText = pokemonData.height;
+    let type = "";
+    const pokemonTypes = pokemonData.types;
+    for (let index = 0; index < pokemonTypes.length; index++) {
+        type = `${type} ${pokemonData.types[index].type.name}`;
     }
+    document.querySelector('#type').innerText = type;
 }
-
-let pokemon1 = new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]);
-let pokemon2 = new Pokemon("Charmander", 2, "Fire");
-let pokemon3 = new Pokemon("Squirtle", 1.08, "Water");
-let pokemon4 = new Pokemon("Charizard", 5.07, ["Fire", "Flying"]);
-
-let pokemonList = [pokemon1, pokemon2, pokemon3, pokemon4];
-
-console.log(pokemonList);
-
-for (let index = 0; index < pokemonList.length; index++) {
-    let className = `#pokemon-name__${index+1}`;
-    let classheight = `#height__${index+1}`;
-    document.querySelector(className).innerText = pokemonList[index].name;
-    document.querySelector(classheight).innerText = pokemonList[index].height > 3 ? `${pokemonList[index].height} - That's big`: `${pokemonList[index].height}`;
-}
+document.querySelector('button').addEventListener('click', () => {
+    let pokemonImage = document.getElementById('pokemon-image') ? document.getElementById('pokemon-image') : false;
+    if (pokemonImage) {
+        document.getElementById('pokedex-image').removeChild(pokemonImage)
+    }
+    let pokemon = document.querySelector('#pokemon').value; 
+    fetchPokemon(pokemon);
+})
