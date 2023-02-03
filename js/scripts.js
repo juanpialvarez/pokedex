@@ -23,5 +23,6 @@ document.querySelector('button').addEventListener('click', () => {
         document.getElementById('pokedex-image').removeChild(pokemonImage)
     }
     let pokemon = document.querySelector('#pokemon').value; 
+    pokemon = pokemon.toLowerCase();
     fetchPokemon(pokemon);
 })
