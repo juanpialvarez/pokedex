@@ -24,7 +24,7 @@
                     <label for="pokemon">Pokemon:</label>
                     <input id="pokemon" name="pokemon" type="text">
                     <br>
-                    <button type="button">Submit</button>
+                    <button id="button-submit" type="button">Submit</button>
                 </form>
             </div>
             <div class="pokedex-results pokedex-item">
@@ -39,6 +39,12 @@
                 <div id="pokedex-image">
                     
                 </div>
+                <form action="add-pokemon">
+                    <button id="button-add" type="button">Add Pokemon</button>
+                </form>
+                <form action="remove-pokemon">
+                    <button id="button-remove" type="button">Remove Pokemon</button>
+                </form>
             </div>
         </div>
         <script src="js/scripts.js"></script>
