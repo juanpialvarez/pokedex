@@ -4,45 +4,76 @@ class Pokemon{
         this.height = height;
         this.types = types;
     }
+
+    get getName(){
+        return this._name;
+    }
+    get getHeight(){
+        return this._height;
+    }
+    get getType(){
+        return this._type;
+    }
+
+    set name(newName){
+        if (typeof newName === "string" || newName instanceof String) this._name = newName;
+    }
+    set height(newHeight){
+        if (typeof newHeight === "number" || newHeight instanceof Number) this._height = newHeight;
+    }
+    set types(newTypes){
+        if (Array.isArray(newTypes)) this._types = newTypes;
+    }
 }
 
-let pokemonList = [
-new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]),
-new Pokemon("Charmander", 2.00, ["Fire"]),
-new Pokemon("Squirtle", 1.08, ["Water"]),
-new Pokemon("Charizard", 5.07, ["Fire", "Flying"])
-];
+let pokeRepository = (function () {
+    let pokemonList = [];
 
-console.log(divide(4, 2));
-console.log(divide(7, 0));
-console.log(divide(1, 4));
-console.log(divide(12, -3));
+    function add(pokemon) {
+        let nullValue = false;
+        Object.keys(pokemon).every(element => {
+            if (pokemon[element] !== null) return true;
+            nullValue = true;
+            return false
+        })
+        if (pokemon instanceof Pokemon && Object.keys(pokemon).length === 3 && nullValue === false) pokemonList.push(pokemon);
+    }
 
-function printPokemons( pokeList){    
-    for (let index = 0; index < pokeList.length; index++) {
-        let heighWrite = pokeList[index].height > 3 ?
-        `Height: ${pokeList[index].height} - That's big`:
-        `Height: ${pokeList[index].height}`
-        document.write(`<p> Name: ${pokeList[index].name} 
+    function getAll() {
+        return pokemonList;
+    }
+
+    return{
+        add: add,
+        getAll: getAll
+    };
+})();
+
+pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]))
+pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]))
+pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]))
+pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]))
+
+let Charizard = new Pokemon("Charizard", 5.07, ["Fire", "Flying"])
+
+printPokemons(pokeRepository.getAll());
+
+function printPokemons(pokeList){ 
+    pokeList.forEach(element => {
+        let heighWrite = element.getHeight > 3 ?
+        `Height: ${element.getHeight} - That's big`:
+        `Height: ${element.getHeight}`
+        document.write(`<p> Name: ${element.getName} 
         <br>
         ${heighWrite}
         <br>
-        Type: ${pokeList[index].types}
+        Type: ${element.getType}
         <br>
         <br>
-        </p>`)    
-    }
+        </p>`)  
+    });   
 }
 
-printPokemons(pokemonList);
-
-function divide(numer, denomin){
-    if (denomin === 0) {
-        console.log("Trying to divide by 0");
-        return;
-    }
-    return numer / denomin;
-}
 
 
 
