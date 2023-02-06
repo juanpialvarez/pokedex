@@ -13,16 +13,36 @@ new Pokemon("Squirtle", 1.08, ["Water"]),
 new Pokemon("Charizard", 5.07, ["Fire", "Flying"])
 ];
 
-for (let index = 0; index < pokemonList.length; index++) {
-    let heighWrite = pokemonList[index].height > 3 ?
-    `Height: ${pokemonList[index].height} - That's big`:
-    `Height: ${pokemonList[index].height}`
-    document.write(`<p> Name: ${pokemonList[index].name} 
-    <br>
-    ${heighWrite}
-    <br>
-    Type: ${pokemonList[index].types}
-    <br>
-    <br>
-    </p>`)    
+console.log(divide(4, 2));
+console.log(divide(7, 0));
+console.log(divide(1, 4));
+console.log(divide(12, -3));
+
+function printPokemons( pokeList){    
+    for (let index = 0; index < pokeList.length; index++) {
+        let heighWrite = pokeList[index].height > 3 ?
+        `Height: ${pokeList[index].height} - That's big`:
+        `Height: ${pokeList[index].height}`
+        document.write(`<p> Name: ${pokeList[index].name} 
+        <br>
+        ${heighWrite}
+        <br>
+        Type: ${pokeList[index].types}
+        <br>
+        <br>
+        </p>`)    
+    }
 }
+
+printPokemons(pokemonList);
+
+function divide(numer, denomin){
+    if (denomin === 0) {
+        console.log("Trying to divide by 0");
+        return;
+    }
+    return numer / denomin;
+}
+
+
+
