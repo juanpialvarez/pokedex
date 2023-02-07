@@ -53,24 +53,16 @@ let pokeRepository = (function () {
         let button = document.createElement('button');
         button.innerText = pokemon.getName;
         button.classList.add('pokemon-button'); 
-        let dropdown = document.createElement('li');
-        dropdown.classList.add('extra-info');
-        dropdown.classList.add('is-visible');
-        let dropdownList = document.createElement('ul');
-        dropdownList.classList.add('attribute-list')
-        Object.keys(pokemon).forEach(attribute => {
-            let attributeValue = attribute === '_height' && pokemon[attribute] > 3 ? `${pokemon[attribute]} - big` : pokemon[attribute];
-            let listAttribute = document.createElement('li');
-            listAttribute.classList.add('attribute');
-            listAttribute.innerText = `${attribute.charAt(1).toUpperCase() + attribute.slice(2)}: ${attributeValue}`;
-            dropdownList.appendChild(listAttribute);
-        })
-        dropdown.appendChild(dropdownList);
         container.appendChild(listElement).appendChild(button);
-        container.append(dropdown);
-        
-
+        button.addEventListener('click', () => {
+            showDetails(pokemon)
+        })        
     }
+
+    function showDetails(pokemon){
+        console.log(pokemon)
+    }
+
     return{
         add: add,
         getAll: getAll,
@@ -92,12 +84,3 @@ function printPokemons(pokeList){
     });   
 }
 
-
-
-let buttons = document.querySelectorAll('.pokemon-button')
-buttons.forEach(button => {
-    button.addEventListener('click',  () => {
-        let listItem = button.parentElement;
-        listItem.nextElementSibling.classList.toggle('is-visible');
-      }); 
-});
