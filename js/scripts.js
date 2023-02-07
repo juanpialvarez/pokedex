@@ -43,9 +43,14 @@ let pokeRepository = (function () {
         return pokemonList;
     }
 
+    function getByName(name){
+        return pokemonList.filter(pokemonList => pokemonList.getName === name)
+    }
+
     return{
         add: add,
-        getAll: getAll
+        getAll: getAll,
+        getByName: getByName
     };
 })();
 
@@ -53,8 +58,6 @@ pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]))
 pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]))
 pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]))
 pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]))
-
-let Charizard = new Pokemon("Charizard", 5.07, ["Fire", "Flying"])
 
 printPokemons(pokeRepository.getAll());
 
