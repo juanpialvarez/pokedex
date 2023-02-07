@@ -47,36 +47,57 @@ let pokeRepository = (function () {
         return pokemonList.filter(pokemonList => pokemonList.getName === name)
     }
 
+    function addListItem(pokemon){
+        let container = document.querySelector('.pokemon-list');
+        let listElement = document.createElement('li');
+        let button = document.createElement('button');
+        button.innerText = pokemon.getName;
+        button.classList.add('pokemon-button'); 
+        let dropdown = document.createElement('li');
+        dropdown.classList.add('extra-info');
+        dropdown.classList.add('is-visible');
+        let dropdownList = document.createElement('ul');
+        dropdownList.classList.add('attribute-list')
+        Object.keys(pokemon).forEach(attribute => {
+            let attributeValue = attribute === '_height' && pokemon[attribute] > 3 ? `${pokemon[attribute]} - big` : pokemon[attribute];
+            let listAttribute = document.createElement('li');
+            listAttribute.classList.add('attribute');
+            listAttribute.innerText = `${attribute.charAt(1).toUpperCase() + attribute.slice(2)}: ${attributeValue}`;
+            dropdownList.appendChild(listAttribute);
+        })
+        dropdown.appendChild(dropdownList);
+        container.appendChild(listElement).appendChild(button);
+        container.append(dropdown);
+        
+
+    }
     return{
         add: add,
         getAll: getAll,
-        getByName: getByName
+        getByName: getByName,
+        addListItem: addListItem
     };
 })();
 
-pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]))
-pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]))
-pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]))
-pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]))
+pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]));
+pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]));
+pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]));
+pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]));
 
 printPokemons(pokeRepository.getAll());
 
 function printPokemons(pokeList){ 
     pokeList.forEach(element => {
-        let heighWrite = element.getHeight > 3 ?
-        `Height: ${element.getHeight} - That's big`:
-        `Height: ${element.getHeight}`
-        document.write(`<p> Name: ${element.getName} 
-        <br>
-        ${heighWrite}
-        <br>
-        Type: ${element.getType}
-        <br>
-        <br>
-        </p>`)  
+        pokeRepository.addListItem(element);
     });   
 }
 
 
 
-
+let buttons = document.querySelectorAll('.pokemon-button')
+buttons.forEach(button => {
+    button.addEventListener('click',  () => {
+        let listItem = button.parentElement;
+        listItem.nextElementSibling.classList.toggle('is-visible');
+      }); 
+});
