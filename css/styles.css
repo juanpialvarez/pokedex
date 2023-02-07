@@ -89,35 +89,6 @@ body{
     margin-top: 5px;
 }
 
-.extra-info{
-    width: 95%;
-}
-
-.attribute-list{
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    width: 95%
-}
-
-.attribute{
-    border: 0px;
-    height: 30px;
-    padding: 3px;
-    margin-top: 5px;
-    margin-left: 10px;
-    text-align: left;
-    background-color: var(--button-color);
-}
-
-.is-visible{
-    display: none;
-    
-}
 
 @media all and (max-width: 300px){
     .container{
