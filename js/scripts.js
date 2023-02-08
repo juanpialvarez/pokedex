@@ -1,8 +1,13 @@
 class Pokemon{
-    constructor(name, height, types){
+    constructor(name = null,
+        height = null,
+        types = null, 
+        url = null){
+
         this.name = name;
         this.height = height;
         this.types = types;
+        this.url = url;
     }
 
     get getName(){
@@ -24,10 +29,28 @@ class Pokemon{
     set types(newTypes){
         if (Array.isArray(newTypes)) this._types = newTypes;
     }
+    set url(newURL){
+        if (typeof newURL === "string" || newURL instanceof String) this._url = newURL;
+    }
 }
 
 let pokeRepository = (function () {
     let pokemonList = [];
+    let apiUrl = `https://pokeapi.co/api/v2/pokemon/?limit=${15}&offset=${0}`
+    
+    function loadList() {
+        return fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          data.results.forEach(item => {
+            let pokemon = new Pokemon()
+            pokemon.name= item.name,
+            pokemon.url= item.url
+            add(pokemon);
+          });
+        })
+        .catch(e => console.log(e))
+      }
 
     function add(pokemon) {
         let nullValue = false;
@@ -36,7 +59,7 @@ let pokeRepository = (function () {
             nullValue = true;
             return false
         })
-        if (pokemon instanceof Pokemon && Object.keys(pokemon).length === 3 && nullValue === false) pokemonList.push(pokemon);
+        if (pokemon instanceof Pokemon) pokemonList.push(pokemon);
     }
 
     function getAll() {
@@ -51,6 +74,7 @@ let pokeRepository = (function () {
         let container = document.querySelector('.pokemon-list');
         let listElement = document.createElement('li');
         let button = document.createElement('button');
+        console.log(pokemon.getName)
         button.innerText = pokemon.getName;
         button.classList.add('pokemon-button'); 
         container.appendChild(listElement).appendChild(button);
@@ -64,6 +88,7 @@ let pokeRepository = (function () {
     }
 
     return{
+        loadList:loadList,
         add: add,
         getAll: getAll,
         getByName: getByName,
@@ -71,16 +96,30 @@ let pokeRepository = (function () {
     };
 })();
 
-pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]));
-pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]));
-pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]));
-pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]));
+// pokeRepository.add(new Pokemon("Bulbasaur", 2.04, ["Grass", "Poison"]));
+// pokeRepository.add(new Pokemon("Charmander", 2.00, ["Fire"]));
+// pokeRepository.add(new Pokemon("Squirtle", 1.08, ["Water"]));
+// pokeRepository.add(new Pokemon("Charizard", 5.07, ["Fire", "Flying"]));
+pokeRepository.loadList()
+.then(() => {
+    pokeRepository.getAll().forEach(element => {
+        console.log(element)
+        pokeRepository.addListItem(element);
+    })
+})
 
 printPokemons(pokeRepository.getAll());
 
 function printPokemons(pokeList){ 
     pokeList.forEach(element => {
+        console.log(element)
         pokeRepository.addListItem(element);
     });   
 }
 
+// fetch('https://pokeapi.co/api/v2/pokemon/?limit=15&offset=0',{
+//     method: 'GET'
+// })
+// .then(response => response.json())
+// .then(data => console.log(data))
+// .catch()
