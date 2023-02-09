@@ -19,7 +19,7 @@ export default class Pokemon{
         return this._height;
     }
     get getType(){
-        return this._type;
+        return this._types;
     }
     get getUrl(){
         return this._url;
