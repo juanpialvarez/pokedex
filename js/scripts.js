@@ -15,7 +15,6 @@ let pokeRepository = (function () {
     }
 
     function showPrevious(){
-        
         return fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
