@@ -2,49 +2,7 @@ import Pokemon from "./pokemon.js";
 
 let pokeRepository = (function () {
     let pokemonList = [];
-    let apiUrl = `https://pokeapi.co/api/v2/pokemon/?limit=8&offset=0`
-
-    function showNext(){
-        return fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            if (data.next) {
-                apiUrl = data.next
-            }
-        })
-    }
-
-    function showPrevious(){
-        return fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            if(data.previous){
-                apiUrl = data.previous
-            }  
-        })
-    }
-
-    function addNavigation(){
-        let container = document.getElementById('nav');
-        let forwardButton = document.createElement('button');
-        forwardButton.classList.add('nav-button')
-        forwardButton.id = 'forward-button'
-        forwardButton.addEventListener('click', ()=>{
-            showNext()
-            loadMain()
-        });
-        forwardButton.innerText = '>'
-        let backButton = document.createElement('button')
-        backButton.classList.add('nav-button')
-        backButton.id = 'back-button'
-        backButton.addEventListener('click', ()=>{
-            showPrevious()
-            loadMain()
-        });
-        backButton.innerText = '<'
-        container.appendChild(backButton);
-        container.appendChild(forwardButton);
-    }
+    let apiUrl = `https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0`
     function loadList() {
         return fetch(apiUrl)
         .then(response => response.json())
@@ -72,9 +30,15 @@ let pokeRepository = (function () {
     function addListItem(pokemon){
         let container = document.querySelector('.pokemon-list');
         let listElement = document.createElement('li');
+        listElement.classList.add('group-list-item')
         let button = document.createElement('button');
         button.innerText = pokemon.getName;
         button.classList.add('pokemon-button'); 
+        button.classList.add('btn');
+        button.classList.add('btn-primary');
+        button.classList.add('btn-block-sm');
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('data-target', '#pokemon-modal');
         container.appendChild(listElement).appendChild(button);
         button.addEventListener('click', () => {
             loadDetails(pokemon)
@@ -88,35 +52,18 @@ let pokeRepository = (function () {
     }
 
     function showDetails(pokemon){
-        let container = document.getElementById('pokemon-modal__container');
-        container.innerHTML = ''
-        let pokemonModal = document.createElement('div');
-        pokemonModal.classList.add('pokemon-modal');
-        let closeButton = document.createElement('button');
-        closeButton.classList.add('pokemon-modal__close');
-        closeButton.innerText = 'X';
-        closeButton.addEventListener('click', () => {
-            container.classList.remove('is-visible');
-        })
-        let title = document.createElement('h1');
-        title.innerText = pokemon.getName;
-        calpitalizeFirst(title);
-        let text = document.createElement('h3')
-        text.innerText = `Height: ${pokemon.getHeight}\n
+        let title = document.getElementById('pokemon-modal-label');
+        title.innerText = pokemon.getName
+        calpitalizeFirst(title)
+        let pokemonModal = document.querySelector('.modal-body');
+        pokemonModal.innerHTML = '';
+        let height = document.createElement('h3')
+        height.innerText = `Height: ${pokemon.getHeight}\n
         Type: ${pokemon.getType}`;
         let image = document.createElement('img');
         image.src = pokemon.getImage;
-        image.classList.add('pokemon-image')
-        container.appendChild(pokemonModal);
-        pokemonModal.appendChild(closeButton);
-        pokemonModal.appendChild(title);
-        pokemonModal.appendChild(text);
-        pokemonModal.appendChild(image);
-        container.classList.add('is-visible');
-        container.addEventListener('click', (action)=>{
-            let target = action.target;
-            if(target === container) container.classList.remove('is-visible');
-        });
+        pokemonModal.appendChild(height)
+        pokemonModal.appendChild(image)
     }
     
 
@@ -140,39 +87,82 @@ let pokeRepository = (function () {
         .catch(e => console.log(e));
     }
 
-    window.addEventListener('keydown', (e) => {
-        let container = document.querySelector('#pokemon-modal__container');
-        if (e.key === 'Escape' && container.classList.contains('is-visible')) {
-            container.classList.remove('is-visible');
-        }
-    });
-
-    function loadMain(){ 
-        pokemonList = [];
-        let container = document.querySelector('.container');
-        container.innerHTML = '';
-        let title =  document.createElement('p');
-        title.classList.add('pokedex-title');
-        title.innerText = 'Pokedex';
-        let list = document.createElement('ul');
-        list.classList.add('pokemon-list');
-        let navigation =  document.createElement('nav');
-        navigation.id = 'nav'
-        container.append(title);
-        container.append(list);
-        container.append(navigation);
-        addNavigation()
-        loadList()
-        .then(() => {
-            getAll().forEach(element => {
-                addListItem(element);
-            })
-        });
+    function nextPage(){
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.next) apiUrl = data.next
+        })
+        .then(()=>{
+            pokemonList = []
+            let list = document.querySelector('.pokemon-list');
+            list.innerHTML = ''
+            loadMain()
+        })
+        .catch(e => console.log(e))
     }
 
+    function previousPage(){
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.previous) apiUrl = data.previous
+        })
+        .then(()=>{
+            pokemonList = []
+            let list = document.querySelector('.pokemon-list');
+            list.innerHTML = ''
+            loadMain()
+        })
+        .catch(e => console.log(e))
+    }
+
+    function loadMain(){  
+        loadList()
+            .then(()=>{
+                getAll().forEach(pokemon => addListItem(pokemon));
+            })
+        let previous = document.getElementById('previous');
+        let next = document.getElementById('next');
+        previous.addEventListener('click', previousPage)
+        next.addEventListener('click', nextPage)
+        let search = document.querySelector('#search-submit');
+        search.addEventListener('click', ()=>{
+            searchPokemon();
+        })
+    }
+
+    function searchPokemon(){
+            let pokemon = document.getElementById('search').value;
+            if(pokemon){
+                pokemonList = []
+                let list = document.querySelector('.pokemon-list');
+                list.innerHTML = ''
+                apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}/`;
+                fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let pokemon = new Pokemon()
+                    pokemon.name= data.name,
+                    pokemon.url= data.url
+                    addListItem(pokemon);
+                })
+                .catch(e => console.log(e))
+            }else{
+                pokemonList = []
+                let list = document.querySelector('.pokemon-list');
+                list.innerHTML = ''
+                apiUrl = `https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0`
+                loadMain()
+            }
+    }
+
+
     return{
+        searchPokemon:searchPokemon,
+        previousPage: previousPage,
+        nextPage: nextPage,
         loadMain: loadMain,
-        addNavigation: addNavigation,
         getAll: getAll,
         loadList:loadList,
         add: add,
