@@ -3,6 +3,7 @@ import Pokemon from "./pokemon.js";
 let pokeRepository = (function () {
     let pokemonList = [];
     let apiUrl = `https://pokeapi.co/api/v2/pokemon/?limit=200&offset=0`
+  
     function loadList() {
         return fetch(apiUrl)
         .then(response => response.json())
@@ -106,7 +107,8 @@ let pokeRepository = (function () {
         fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            if (data.previous) apiUrl = data.previous
+            if (data.previous && data.next) apiUrl = data.previous
+            if (data.previous && !data.next) apiUrl = "https://pokeapi.co/api/v2/pokemon/?offset=1000&limit=200"
         })
         .then(()=>{
             pokemonList = []
@@ -115,6 +117,7 @@ let pokeRepository = (function () {
             loadMain()
         })
         .catch(e => console.log(e))
+
     }
 
     function loadMain(){  
@@ -127,7 +130,7 @@ let pokeRepository = (function () {
         previous.addEventListener('click', previousPage)
         next.addEventListener('click', nextPage)
         let search = document.querySelector('#search-submit');
-        search.addEventListener('click', ()=>{
+        search.addEventListener('submit', ()=>{
             searchPokemon();
         })
     }
@@ -143,8 +146,8 @@ let pokeRepository = (function () {
                 .then(response => response.json())
                 .then(data => {
                     let pokemon = new Pokemon()
-                    pokemon.name= data.name,
-                    pokemon.url= data.url
+                    pokemon.name= data.name;
+                    pokemon.url= data.url;
                     addListItem(pokemon);
                 })
                 .catch(e => console.log(e))
