@@ -66,6 +66,9 @@ footer {
   .pokedex-title {
     position: static;
   }
+  #search-submit {
+    display: none;
+  }
 }
 @media all and (max-width: 500px) {
   .pokemon-list {
@@ -78,5 +81,8 @@ footer {
     padding: 5px;
     width: 100vw;
     margin: 20px 0 0;
+  }
+  .pokedex-title {
+    display: none;
   }
 }

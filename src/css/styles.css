@@ -113,6 +113,9 @@ footer {
   .nav-search {
     position: static;
   }
+  #search-submit {
+    display: none;
+  }
 }
 
 @media all and (max-width: 500px) {
@@ -127,5 +130,8 @@ footer {
     width: 100vw;
     margin: 0;
     margin-top: 20px;
+  }
+  .pokedex-title {
+    display: none;
   }
 }
