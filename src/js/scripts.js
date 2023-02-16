@@ -128,8 +128,14 @@ let pokeRepository = (function () {
     previous.addEventListener("click", previousPage);
     next.addEventListener("click", nextPage);
     let search = document.querySelector("#search-submit");
-    search.addEventListener("submit", () => {
+    search.addEventListener("click", () => {
       searchPokemon();
+    });
+    let searchText = document.querySelector("#search-text");
+    searchText.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        searchPokemon();
+      }
     });
   }
 
