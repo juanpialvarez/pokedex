@@ -127,31 +127,27 @@ let pokeRepository = (function () {
     let next = document.getElementById("next");
     previous.addEventListener("click", previousPage);
     next.addEventListener("click", nextPage);
-    let search = document.querySelector("#search-submit");
-    search.addEventListener("click", () => {
+    let search = document.querySelector(".nav-search");
+    search.addEventListener("submit", (event) => {
       searchPokemon();
-    });
-    let searchText = document.querySelector("#search-text");
-    searchText.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        searchPokemon();
-      }
+      event.preventDefault();
     });
   }
 
   function searchPokemon() {
     let pokemon = document.getElementById("search").value;
     if (pokemon) {
-      pokemonList = [];
-      let list = document.querySelector(".pokemon-list");
-      list.innerHTML = "";
       apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}/`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           let pokemon = new Pokemon();
           pokemon.name = data.name;
-          pokemon.url = data.url;
+          pokemon.url = apiUrl;
+          pokemonList = [];
+          let list = document.querySelector(".pokemon-list");
+          list.innerHTML = "";
+          add(pokemon);
           addListItem(pokemon);
         })
         .catch((e) => console.log(e));

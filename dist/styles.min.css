@@ -16,6 +16,9 @@ footer {
   align-items: center;
   height: 80px;
 }
+main {
+  min-height: 500px;
+}
 .pokemon-list {
   width: 100%;
   display: flex;

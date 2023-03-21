@@ -53,6 +53,10 @@ footer {
   height: 80px;
 }
 
+main {
+  min-height: 500px;
+}
+
 .pokemon-list {
   width: 100%;
   display: flex;
